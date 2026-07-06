@@ -4,7 +4,6 @@ import com.oceanbase.obvector4j.filter.Filter;
 import com.oceanbase.obvector4j.filter.FilterMapper;
 import com.oceanbase.obvector4j.hybrid.core.HybridSearchDsl;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * Entry point for building OceanBase 4.6.0+ HYBRID_SEARCH DSL from {@link HybridDslKeys}.

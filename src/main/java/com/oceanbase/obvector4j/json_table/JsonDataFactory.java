@@ -51,7 +51,7 @@ public class JsonDataFactory {
                     } else {
                         return new JsonTimestamp(db_res.getTimestamp(1));
                     }
-                }            
+                }
             case J_DECIMAL:
                 {
                     if (col_name != null) {
@@ -63,7 +63,7 @@ public class JsonDataFactory {
                     } else {
                         return new JsonDecimal(
                             this.jsonDecimalDigits,
-                            this.jsonDecimalPrecise, 
+                            this.jsonDecimalPrecise,
                             db_res.getBigDecimal(1)
                         );
                     }

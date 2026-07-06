@@ -1,6 +1,5 @@
 package com.oceanbase.obvector4j;
 
-import com.oceanbase.obvector4j.filter.Filter;
 import com.oceanbase.obvector4j.hybrid.HybridSearchEngine;
 import com.oceanbase.obvector4j.hybrid.core.HybridSearch;
 import com.oceanbase.obvector4j.hybrid.core.HybridSearchSupport;
@@ -24,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -277,7 +275,7 @@ public class ObVecClient implements AutoCloseable {
         }
     }
 
-    public ArrayList<HashMap<String, Sqlizable>> query(String table_name, 
+    public ArrayList<HashMap<String, Sqlizable>> query(String table_name,
                       String vec_col_name,
                       String metric_type,
                       float[] qv,
@@ -305,12 +303,14 @@ public class ObVecClient implements AutoCloseable {
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 int project_count = metaData.getColumnCount();
                 if (project_count != output_datatypes.length) {
-                    throw new IllegalArgumentException(" the length of output_datatypes: " + output_datatypes.length + " mismatched with projected column size: " + project_count);
+                    throw new IllegalArgumentException(
+                            " the length of output_datatypes: " + output_datatypes.length
+                                    + " mismatched with projected column size: " + project_count);
                 }
-                
+
                 while (resultSet.next()) {
                     HashMap<String, Sqlizable> row = new HashMap<>();
-                    
+
                     for (int i = 1; i <= project_count; i++) {
                         String columnName = metaData.getColumnName(i);
                         Sqlizable sqlizable = SqlizableFactory.build(output_datatypes[i - 1], resultSet, columnName);
@@ -426,7 +426,7 @@ public class ObVecClient implements AutoCloseable {
                         return DataType.STRING;
                     }
                     typeName = typeName.toUpperCase();
-                    
+
                     if (typeName.contains("VECTOR") || typeName.contains("FLOAT_VECTOR")) {
                         return DataType.FLOAT_VECTOR;
                     } else if (typeName.contains("TINYINT")) {

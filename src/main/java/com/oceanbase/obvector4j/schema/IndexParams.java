@@ -18,7 +18,7 @@ public class IndexParams extends Visitable {
         String[] vidx_defs = new String[index_params.size()];
         for (int i = 0; i < index_params.size(); i++) {
             IndexParam index_param = index_params.get(i);
-            vidx_defs[i] = String.format("VECTOR INDEX %s(%s) %s", 
+            vidx_defs[i] = String.format("VECTOR INDEX %s(%s) %s",
                             index_param.getVidxName(),
                             index_param.getFieldName(),
                             index_params.get(i).visit());

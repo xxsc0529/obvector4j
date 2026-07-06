@@ -12,6 +12,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>  <!-- 指定源码兼容 Java 8 -->
     <maven.compiler.target>1.8</maven.compiler.target>  <!-- 指定编译目标 Java 8 -->
+    <checkstyle.version>9.3</checkstyle.version>  <!-- 9.3 是最后支持 Java 8 的版本 -->
+    <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
   </properties>
 
   <dependencies>
@@ -147,6 +149,35 @@
                   <id>attach-sources</id>
                   <goals>
                       <goal>jar-no-fork</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${maven-checkstyle-plugin.version}</version>
+          <dependencies>
+              <dependency>
+                  <groupId>com.puppycrawl.tools</groupId>
+                  <artifactId>checkstyle</artifactId>
+                  <version>${checkstyle.version}</version>
+              </dependency>
+          </dependencies>
+          <configuration>
+              <configLocation>config/checkstyle.xml</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+              <skip>false</skip>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>validate</id>
+                  <phase>validate</phase>
+                  <goals>
+                      <goal>check</goal>
                   </goals>
               </execution>
           </executions>

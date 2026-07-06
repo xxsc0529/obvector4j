@@ -7,7 +7,7 @@ import java.util.Collection;
  * Uses enum to distinguish between different operation types.
  */
 public class Filter {
-    
+
     /**
      * Filter operation type
      */
@@ -22,13 +22,13 @@ public class Filter {
         IN,                 // IN
         NOT_IN,             // NOT IN
         CONTAINS,           // LIKE '%value%'
-        
+
         // Logical operations
         AND,                // AND
         OR,                 // OR
         NOT                 // NOT
     }
-    
+
     private final Type type;
     private final String key;
     private final Object value;
@@ -36,9 +36,9 @@ public class Filter {
     private final Filter left;            // For logical operations
     private final Filter right;           // For logical operations
     private final Filter expression;      // For NOT operation
-    
+
     // Private constructors for different filter types
-    
+
     /**
      * Constructor for comparison filters with single value
      */
@@ -57,7 +57,7 @@ public class Filter {
         this.right = null;
         this.expression = null;
     }
-    
+
     /**
      * Constructor for IN/NOT_IN filters
      */
@@ -76,7 +76,7 @@ public class Filter {
         this.right = null;
         this.expression = null;
     }
-    
+
     /**
      * Constructor for AND/OR filters
      */
@@ -92,7 +92,7 @@ public class Filter {
         this.right = right;
         this.expression = null;
     }
-    
+
     /**
      * Constructor for NOT filter
      */
@@ -108,47 +108,47 @@ public class Filter {
         this.right = null;
         this.expression = expression;
     }
-    
+
     // Factory methods for comparison filters
-    
+
     public static Filter equal(String key, Object value) {
         return new Filter(Type.EQUAL, key, value);
     }
-    
+
     public static Filter notEqual(String key, Object value) {
         return new Filter(Type.NOT_EQUAL, key, value);
     }
-    
+
     public static Filter greaterThan(String key, Object value) {
         return new Filter(Type.GREATER_THAN, key, value);
     }
-    
+
     public static Filter greaterThanOrEqual(String key, Object value) {
         return new Filter(Type.GREATER_THAN_OR_EQUAL, key, value);
     }
-    
+
     public static Filter lessThan(String key, Object value) {
         return new Filter(Type.LESS_THAN, key, value);
     }
-    
+
     public static Filter lessThanOrEqual(String key, Object value) {
         return new Filter(Type.LESS_THAN_OR_EQUAL, key, value);
     }
-    
+
     public static Filter in(String key, Collection<?> values) {
         return new Filter(Type.IN, key, values);
     }
-    
+
     public static Filter notIn(String key, Collection<?> values) {
         return new Filter(Type.NOT_IN, key, values);
     }
-    
+
     public static Filter contains(String key, String value) {
         return new Filter(Type.CONTAINS, key, value);
     }
-    
+
     // Factory methods for logical filters
-    
+
     public static Filter and(Filter left, Filter right) {
         return new Filter(Type.AND, left, right);
     }
@@ -170,7 +170,7 @@ public class Filter {
         }
         return result;
     }
-    
+
     public static Filter or(Filter left, Filter right) {
         return new Filter(Type.OR, left, right);
     }
@@ -192,37 +192,37 @@ public class Filter {
         }
         return result;
     }
-    
+
     public static Filter not(Filter expression) {
         return new Filter(Type.NOT, expression);
     }
-    
+
     // Getters
-    
+
     public Type getType() {
         return type;
     }
-    
+
     public String getKey() {
         return key;
     }
-    
+
     public Object getValue() {
         return value;
     }
-    
+
     public Collection<?> getValues() {
         return values;
     }
-    
+
     public Filter getLeft() {
         return left;
     }
-    
+
     public Filter getRight() {
         return right;
     }
-    
+
     public Filter getExpression() {
         return expression;
     }

@@ -40,7 +40,7 @@ public class ObVecJsonClient extends ObVecClient {
         this.logger.setLevel(log_level);
         this.metadata = new JsonTableMetadata(user_id);
         this.user_id = user_id;
-        
+
         String createDataJsonTableSQL = "CREATE TABLE IF NOT EXISTS `" + DATA_JSON_TABLE_NAME + "` (\n" + //
                 "  `user_id` varchar(128) NOT NULL,\n" + //
                 "  `admin_id` varchar(128) NOT NULL,\n" + //
@@ -60,7 +60,7 @@ public class ObVecJsonClient extends ObVecClient {
                 "  `jcol_default` json DEFAULT NULL,\n" + //
                 "  PRIMARY KEY (`user_id`, `jtable_name`, `jcol_id`, `jcol_name`)\n" + //
                 ")";
-        
+
         if (!skip_create) {
             try (Statement stmt = this.conn.createStatement()) {
                 this.conn.setAutoCommit(false);
@@ -118,7 +118,7 @@ public class ObVecJsonClient extends ObVecClient {
         if (table == null) {
             throw new IllegalArgumentException("Invalid create table statement: " + stmt.toString());
         }
-        
+
         String table_name = getRealName(table.getName());
         if (table_name == DATA_JSON_TABLE_NAME || table_name == META_JSON_TABLE_NAME) {
             throw new IllegalArgumentException("Invalid table name: " + table_name);
@@ -135,7 +135,7 @@ public class ObVecJsonClient extends ObVecClient {
         }
         String insert_sql_str = "INSERT INTO " + META_JSON_TABLE_NAME + //
             " (user_id, jtable_name, jcol_id, jcol_name, " + //
-            "jcol_type, jcol_nullable, jcol_has_default, jcol_default)" + // 
+            "jcol_type, jcol_nullable, jcol_has_default, jcol_default)" + //
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement insert_schema_stmt = this.conn.prepareStatement(insert_sql_str)) {
             this.conn.setAutoCommit(false);
@@ -181,7 +181,7 @@ public class ObVecJsonClient extends ObVecClient {
                 }
 
                 JsonTableColumn jtable_column = new JsonTableColumn(
-                    col_id, col_name, col_type_str, 
+                    col_id, col_name, col_type_str,
                     col_nullable, col_has_default, col_default_val
                 );
 
@@ -198,7 +198,7 @@ public class ObVecJsonClient extends ObVecClient {
                 }
 
                 new_meta_cache_items.add(jtable_column);
-                
+
                 JSONObject json_default = new JSONObject();
                 json_default.put("default", col_default_val);
                 insert_schema_stmt.setString(1, this.user_id);
@@ -212,7 +212,7 @@ public class ObVecJsonClient extends ObVecClient {
                 insert_schema_stmt.executeUpdate();
                 col_id += 1;
             }
-            
+
             this.conn.commit();
             this.metadata.addMeta(table_name, new_meta_cache_items);
         } catch (SQLException e) {
@@ -287,7 +287,7 @@ public class ObVecJsonClient extends ObVecClient {
         } else if (col_types.size() > 1) {
             throw new UnsupportedOperationException("Multiple column data types is not supported");
         }
-        
+
         ColumnDataType data_type = col_types.get(0);
         String new_col_name = data_type.getColumnName();
         ColDataType new_col_data_type = data_type.getColDataType();
@@ -457,7 +457,7 @@ public class ObVecJsonClient extends ObVecClient {
         } else if (col_types.size() > 1) {
             throw new UnsupportedOperationException("Multiple column data types is not supported");
         }
-        
+
         ColumnDataType data_type = col_types.get(0);
         String col_name = data_type.getColumnName();
         if (col_name == null) {
@@ -509,7 +509,7 @@ public class ObVecJsonClient extends ObVecClient {
             update_meta_sql.setString(7, table_name);
             update_meta_sql.setString(8, col_name);
             update_meta_sql.executeUpdate();
-            
+
             if (col_constraints.jcol_default == null) {
                 cast_col_sql_without_default.setString(1, this.user_id);
                 cast_col_sql_without_default.setString(2, table_name);
@@ -570,7 +570,7 @@ public class ObVecJsonClient extends ObVecClient {
 
         String insert_sql_str = "INSERT INTO " + META_JSON_TABLE_NAME + //
             " (user_id, jtable_name, jcol_id, jcol_name, " + //
-            "jcol_type, jcol_nullable, jcol_has_default, jcol_default)" + // 
+            "jcol_type, jcol_nullable, jcol_has_default, jcol_default)" + //
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String insert_col_sql_str_without_default = String.format("UPDATE " + DATA_JSON_TABLE_NAME + //
             " SET jdata = json_insert(jdata, '$.%s', null)" + //
@@ -598,7 +598,7 @@ public class ObVecJsonClient extends ObVecClient {
             json_default.put("default", col_constraints.jcol_default);
             insert_sql.setString(8, json_default.toJSONString());
             insert_sql.executeUpdate();
-            
+
             if (col_constraints.jcol_default == null) {
                 insert_col_sql_without_default.setString(1, this.user_id);
                 insert_col_sql_without_default.setString(2, table_name);
@@ -637,7 +637,7 @@ public class ObVecJsonClient extends ObVecClient {
         String update_name_sql_str = "UPDATE " + META_JSON_TABLE_NAME + //
             " SET jtable_name = ?" + //
             " WHERE user_id = ? AND jtable_name = ?";
-        
+
         try (PreparedStatement update_name_sql = this.conn.prepareStatement(update_name_sql_str)) {
             this.conn.setAutoCommit(false);
             update_name_sql.setString(1, new_table_name);
@@ -705,7 +705,7 @@ public class ObVecJsonClient extends ObVecClient {
         if (!type.toUpperCase().equals("TABLE")) {
             throw new IllegalArgumentException("DROP " + type + " is not supported");
         }
-        
+
         net.sf.jsqlparser.schema.Table table = stmt.getName();
         if (table == null) {
             throw new IllegalArgumentException("Invalid drop table statement: " + stmt.toString());
@@ -724,7 +724,7 @@ public class ObVecJsonClient extends ObVecClient {
             " WHERE user_id = ? AND jtable_name = ?";
         String delete_data_sql_str = "DELETE FROM " + DATA_JSON_TABLE_NAME + //
             " WHERE admin_id = ? AND jtable_name = ?";
-        
+
         try (PreparedStatement delete_meta_sql = this.conn.prepareStatement(delete_meta_sql_str);
             PreparedStatement delete_data_sql = this.conn.prepareStatement(delete_data_sql_str)) {
            this.conn.setAutoCommit(false);

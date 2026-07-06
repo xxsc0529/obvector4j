@@ -18,5 +18,5 @@ public class SqlInteger extends Sqlizable {
     @Override
     public String toString() {
         return String.valueOf(int_val);
-    }   
+    }
 }

@@ -21,5 +21,5 @@ public class JsonTimestamp extends JsonData {
         }
         return "'" + val.toString() + "'";
     }
-    
+
 }

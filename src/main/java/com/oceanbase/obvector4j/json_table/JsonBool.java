@@ -18,9 +18,10 @@ public class JsonBool extends JsonData {
         if (this.val == null) {
             return "null";
         }
-        if (this.val)
+        if (this.val) {
             return "1";
-        else
+        } else {
             return "0";
+        }
     }
 }

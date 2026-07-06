@@ -57,7 +57,7 @@ public class IndexParam extends Visitable {
 
     @Override
     public String visit() {
-        return String.format("WITH(m=%d, ef_construction=%d, ef_search=%d, lib=%s, distance=%s, type=hnsw)", 
+        return String.format("WITH(m=%d, ef_construction=%d, ef_search=%d, lib=%s, distance=%s, type=hnsw)",
                       this.m, this.ef_construction, this.ef_search,
                       this.lib, this.metric_type);
     }

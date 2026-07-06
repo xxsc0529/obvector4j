@@ -19,5 +19,5 @@ public class SqlDouble extends Sqlizable {
     public String toString() {
         return String.valueOf(double_val);
     }
-    
+
 }
