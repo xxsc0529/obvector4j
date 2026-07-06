@@ -220,6 +220,63 @@ public class ObVecClient implements AutoCloseable {
         }
     }
 
+    /**
+     * Update rows by primary key.
+     * @param table_name Table name
+     * @param column_names Column names to update (excluding the primary key)
+     * @param values New values for each row (must align with column_names)
+     * @param primary_key_name Primary key column name
+     * @param primary_keys Primary key values to identify rows (must align with values)
+     * @throws Throwable on error
+     */
+    public void update(String table_name, String[] column_names, ArrayList<Sqlizable[]> values,
+                       String primary_key_name, ArrayList<Sqlizable> primary_keys) throws Throwable
+    {
+        if (values.isEmpty()) {
+            return;
+        }
+        if (values.size() != primary_keys.size()) {
+            throw new IllegalArgumentException("values size mismatched with primary_keys size");
+        }
+        String[] setParams = new String[column_names.length];
+        for (int i = 0; i < column_names.length; i++) {
+            setParams[i] = column_names[i] + " = ?";
+        }
+        String sql = String.format("UPDATE %s SET %s WHERE %s = ?",
+                        table_name,
+                        String.join(", ", setParams),
+                        primary_key_name);
+        conn.setAutoCommit(false);
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            for (int i = 0; i < values.size(); i++) {
+                Sqlizable[] cols = values.get(i);
+                if (cols.length != column_names.length) {
+                    throw new UnsupportedOperationException("column size mismatch");
+                }
+                for (int col_id = 0; col_id < cols.length; col_id++) {
+                    cols[col_id].toDB(col_id + 1, preparedStatement);
+                }
+                primary_keys.get(i).toDB(cols.length + 1, preparedStatement);
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            conn.commit();
+        } catch (Throwable e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException rollbackEx) {
+                    throw rollbackEx;
+                }
+            }
+            throw e;
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
     public ArrayList<HashMap<String, Sqlizable>> query(String table_name, 
                       String vec_col_name,
                       String metric_type,

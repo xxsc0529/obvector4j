@@ -32,20 +32,15 @@ public class JsonTableMetadata {
     public void reflect(Connection conn) throws Throwable {
         meta_cache.clear();
 
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            statement = conn.createStatement();
-            String sql = String.format(
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(String.format(
                 "SELECT jtable_name, jcol_id, " + //
                 "jcol_name, jcol_type, jcol_nullable, " + //
                 "jcol_has_default, jcol_default " + //
                 "FROM meta_json_t " + //
                 "WHERE user_id = '%s'",
                 user_id
-            );
-
-            resultSet = statement.executeQuery(sql);
+             ))) {
 
             while (resultSet.next()) {
                 String table_name = resultSet.getString("jtable_name");
@@ -56,11 +51,10 @@ public class JsonTableMetadata {
                 }
                 String jcol_default_str = resultSet.getString("jcol_default");
                 JSONParser parser = new JSONParser();
-                JSONObject json_obj = null;
+                JSONObject json_obj;
                 try {
                     json_obj = (JSONObject) parser.parse(jcol_default_str);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     throw new IllegalArgumentException("Invalid default value: " + jcol_default_str);
                 }
                 if (json_obj.get("default") == null) {
@@ -82,17 +76,6 @@ public class JsonTableMetadata {
                         json_obj.get("default").toString()
                     ));
                 }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw e;
             }
         }
     }

@@ -68,12 +68,10 @@ public class ObVecJsonClient extends ObVecClient {
                 stmt.execute(createMetaJsonTableSQL);
                 this.conn.commit();
             } catch (SQLException e) {
-                e.printStackTrace();
                 if (this.conn != null) {
                     try {
                         this.conn.rollback();
                     } catch (SQLException se) {
-                        se.printStackTrace();
                         throw se;
                     }
                 }
@@ -81,12 +79,7 @@ public class ObVecJsonClient extends ObVecClient {
             }
         }
 
-        try {
-            metadata.reflect(this.conn);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        metadata.reflect(this.conn);
     }
 
     public void reset() throws Throwable {
@@ -97,12 +90,10 @@ public class ObVecJsonClient extends ObVecClient {
             this.conn.commit();
             metadata.clearMeta();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -157,15 +148,6 @@ public class ObVecJsonClient extends ObVecClient {
                 String col_type_str = col_data_type.toString().toUpperCase();
                 List<String> col_specs = col_def.getColumnSpecs();
 
-                // System.out.println("Column info [ " + col_id + " ]: ");
-                // System.out.println(col_name);
-                // System.out.println(col_type_str);
-                // if (col_specs != null) {
-                //     for (String spec : col_specs) {
-                //         System.out.println(spec);
-                //     }
-                // }
-
                 int spec_idx = 0;
                 boolean col_has_default = false;
                 boolean col_nullable = true;
@@ -205,23 +187,13 @@ public class ObVecJsonClient extends ObVecClient {
 
                 // validation
                 if (col_has_default && (col_default_val != null)) {
-                    ResultSet res = null;
-                    Statement sql_stmt = null;
-                    try {
-                        sql_stmt = this.conn.createStatement();
-                        res = sql_stmt.executeQuery("SELECT " + col_default_val);
+                    try (Statement sql_stmt = this.conn.createStatement();
+                         ResultSet res = sql_stmt.executeQuery("SELECT " + col_default_val)) {
+                        if (!jtable_column.validation(res, null)) {
+                            throw new IllegalArgumentException("Invalid default value: " + col_def.toString());
+                        }
                     } catch (SQLException e) {
-                        e.printStackTrace();
                         throw new IllegalArgumentException("Invalid default value: " + col_def.toString());
-                    }
-                    if (!jtable_column.validation(res, null)) {
-                        throw new IllegalArgumentException("Invalid default value: " + col_def.toString());
-                    }
-                    try {
-                        if (res != null) res.close();
-                        if (sql_stmt != null) sql_stmt.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
                     }
                 }
 
@@ -244,12 +216,10 @@ public class ObVecJsonClient extends ObVecClient {
             this.conn.commit();
             this.metadata.addMeta(table_name, new_meta_cache_items);
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -365,12 +335,10 @@ public class ObVecJsonClient extends ObVecClient {
             cast_col_sql.executeUpdate();
             this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -411,37 +379,25 @@ public class ObVecJsonClient extends ObVecClient {
             delete_col_sql.executeUpdate();
             this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
             throw e;
-        }        
+        }
     }
 
     private boolean checkDefaultValue(JsonTableColumn jtable_column) {
         if (jtable_column.jcol_has_default && (jtable_column.jcol_default != null)) {
-            ResultSet res = null;
-            Statement sql_stmt = null;
-            try {
-                sql_stmt = this.conn.createStatement();
-                res = sql_stmt.executeQuery("SELECT " + jtable_column.jcol_default);
+            try (Statement sql_stmt = this.conn.createStatement();
+                 ResultSet res = sql_stmt.executeQuery("SELECT " + jtable_column.jcol_default)) {
+                if (!jtable_column.validation(res, null)) {
+                    return false;
+                }
             } catch (SQLException e) {
-                return false;
-            }
-            if (!jtable_column.validation(res, null)) {
-                return false;
-            }
-            try {
-                if (res != null) res.close();
-                if (sql_stmt != null) sql_stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
                 return false;
             }
         }
@@ -566,12 +522,10 @@ public class ObVecJsonClient extends ObVecClient {
 
             this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -657,12 +611,10 @@ public class ObVecJsonClient extends ObVecClient {
 
             this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -694,12 +646,10 @@ public class ObVecJsonClient extends ObVecClient {
             update_name_sql.executeUpdate();
             this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
@@ -747,12 +697,7 @@ public class ObVecJsonClient extends ObVecClient {
             }
         }
 
-        try {
-            metadata.reflect(this.conn);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
-        }
+        metadata.reflect(this.conn);
     }
 
     private void handleDropTable(Drop stmt) throws Throwable {
@@ -792,23 +737,17 @@ public class ObVecJsonClient extends ObVecClient {
            delete_data_sql.executeUpdate();
            this.conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             if (this.conn != null) {
                 try {
                     this.conn.rollback();
                 } catch (SQLException se) {
-                    se.printStackTrace();
                     throw se;
                 }
             }
             throw e;
         }
 
-        try {
-            metadata.reflect(this.conn);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        metadata.reflect(this.conn);
     }
 
     public String parseJsonTableSQL2NormalSQL(String json_table_sql) throws Throwable {

@@ -83,9 +83,8 @@ public class JsonTableColumn {
             this.jdata = jcol_model.build(res, col_name);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     @Override

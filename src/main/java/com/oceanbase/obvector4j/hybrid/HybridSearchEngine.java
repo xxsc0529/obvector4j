@@ -271,9 +271,6 @@ public final class HybridSearchEngine {
                     results.add(row);
                 }
             }
-        } catch (Throwable e) {
-            System.err.println("WARNING: Fulltext search failed, returning empty results: " + e.getMessage());
-            return new ArrayList<>();
         }
         return results;
     }
