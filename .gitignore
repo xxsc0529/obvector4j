@@ -7,7 +7,7 @@ target/
 *.iws
 *.ipr
 .vscode/
-.class
+*.class
 .classpath
 .project
 .settings/

@@ -9,7 +9,7 @@ Java SDK for OceanBase vector store: vector table CRUD, ANN search, hybrid searc
 ## Documentation
 
 - English: [docs/en/](docs/en/)
-- 中文: [docs/zh/](docs/zh/00-文档目录.md)
+- 中文: [docs/zh/](docs/zh/)
 
 ---
 
@@ -26,7 +26,7 @@ Java SDK for OceanBase vector store: vector table CRUD, ANN search, hybrid searc
 ```bash
 git clone https://github.com/oceanbase/obvector4j.git
 cd obvector4j
-mvn install
+make build
 ```
 
 ## Connect

@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2024 OceanBase. All rights reserved.
+ *
+ * obvector4j is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ *     http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *
+ * See the Mulan PSL v2 for more details.
+ */
+
 package com.oceanbase.obvector4j.integration.container;
 
 import com.oceanbase.obvector4j.support.OceanBaseContainerTestBase;
@@ -61,8 +77,8 @@ public class HybridSearchTest extends TestCase {
             URI = OceanBaseContainerTestBase.getJdbcUrl();
             USER = OceanBaseContainerTestBase.getUsername();
             PASSWORD = OceanBaseContainerTestBase.getPassword();
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize test container", e);
         }
     }
 
@@ -109,13 +125,13 @@ public class HybridSearchTest extends TestCase {
             // Create full-text indexes
             try {
                 ob.createFulltextIndex(tb_name, "ft_title", "title");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // Ignore if index creation fails
             }
 
             try {
                 ob.createFulltextIndex(tb_name, "ft_content", "content");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // Ignore if index creation fails
             }
 
@@ -192,8 +208,7 @@ public class HybridSearchTest extends TestCase {
 
             assertNotNull("Results should not be null", results3);
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -347,8 +362,7 @@ public class HybridSearchTest extends TestCase {
 
             assertNotNull("Results should not be null", results3);
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -598,8 +612,7 @@ public class HybridSearchTest extends TestCase {
                 assertTrue("price should be <= 200", priceVal <= 200.0);
             }
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -652,7 +665,7 @@ public class HybridSearchTest extends TestCase {
             // Create full-text indexes
             try {
                 ob.createFulltextIndex(tb_name, "ft_title", "title");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // Ignore if index creation fails
             }
 
@@ -723,8 +736,7 @@ public class HybridSearchTest extends TestCase {
                 assertTrue("price should be <= 250", priceVal <= 250.0);
             }
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -765,7 +777,7 @@ public class HybridSearchTest extends TestCase {
             // Create full-text index
             try {
                 ob.createFulltextIndex(tb_name, "ft_title", "title");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // Ignore if index already exists
             }
 
@@ -799,8 +811,7 @@ public class HybridSearchTest extends TestCase {
 
             assertNotNull("Results should not be null", results);
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -849,7 +860,7 @@ public class HybridSearchTest extends TestCase {
             try {
                 ob.createFulltextIndex(tb_name, "ft_title", "title");
                 ob.createFulltextIndex(tb_name, "ft_content", "content");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // Ignore if index creation fails
             }
 
@@ -901,8 +912,7 @@ public class HybridSearchTest extends TestCase {
                 assertNotNull("content should not be null", row.get("content"));
             }
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }
@@ -1026,8 +1036,7 @@ public class HybridSearchTest extends TestCase {
             }
             assertTrue("All results should satisfy filter conditions", allValid);
 
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             fail("Test failed with exception: " + e.getMessage());
         }
     }

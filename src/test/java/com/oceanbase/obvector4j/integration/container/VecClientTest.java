@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2024 OceanBase. All rights reserved.
+ *
+ * obvector4j is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ *     http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *
+ * See the Mulan PSL v2 for more details.
+ */
+
 package com.oceanbase.obvector4j.integration.container;
 
 import com.oceanbase.obvector4j.support.OceanBaseContainerTestBase;
@@ -49,8 +65,8 @@ public class VecClientTest extends TestCase {
         try {
             Class.forName("com.oceanbase.jdbc.Driver");
             OceanBaseContainerTestBase.initContainer();
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize test container", e);
         }
     }
 
@@ -179,8 +195,8 @@ public class VecClientTest extends TestCase {
                 ef_search = ob.getHNSWEfSearch();
                 client2_efsearch = client2.getHNSWEfSearch();
                 System.out.println("ef_search: " + ef_search + " client2 ef_search: " + client2_efsearch);
-            } catch (Throwable e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException("Test failed", e);
             }
     }
 }

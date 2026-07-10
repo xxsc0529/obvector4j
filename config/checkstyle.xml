@@ -62,5 +62,11 @@
             <property name="tokens" value="LITERAL_CATCH"/>
             <property name="option" value="text"/>
         </module>
+
+        <!-- Disallow catching Throwable or Error -->
+        <module name="IllegalCatch">
+            <property name="illegalClassNames"
+                      value="Error, Throwable, java.lang.Error, java.lang.Throwable"/>
+        </module>
     </module>
 </module>
